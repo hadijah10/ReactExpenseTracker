@@ -42,7 +42,7 @@ function AddExpenseForm({budgets}) {
                     name="newExpenseAmount" 
                     id="newExpenseAmount"/>
                     <label htmlFor="newExpenseBudget">Budget Category</label>
-                    <select name='newExpenseBudget' id='newExpenseBudget' required>
+                    <select name="newExpenseBudget" id='newExpenseBudget' required>
                     {
                         budgets.sort((a,b) => 
                             a.createdAt -b.createdAt

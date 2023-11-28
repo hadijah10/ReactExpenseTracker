@@ -1,17 +1,20 @@
 import React from 'react'
-import { useLoaderData } from 'react-router-dom';
+import { Link, useLoaderData } from 'react-router-dom';
 import { createBudget, createExpense, fetchData } from '../helpers';
 import Intro from '../components/Intro';
 import {toast } from 'react-toastify';
 import AddBudgetForm from '../components/AddBudgetForm';
 import AddExpenseForm from '../components/AddExpenseForm';
+import BudgetItem from '../components/BudgetItem';
+import Table from '../components/Table';
 
 export function dashboardLoader(){
 const userName = fetchData("userName");
 const budgets = fetchData('budgets');
-return {userName, budgets}
+const expenses = fetchData('expenses');
+return {userName, budgets,expenses}
 }
-export const waait = ()=>new Promise(res => setTimeout(res,Math.random()*2000))
+export const waait = ()=>new Promise(res => setTimeout(res,Math.random()*800))
 
 export async function dashboardAction({request}){
     await waait()
@@ -52,7 +55,7 @@ export async function dashboardAction({request}){
 }
 
 function Dashboard() {
-  const {userName,budgets} = useLoaderData();
+  const {userName,budgets,expenses} = useLoaderData();
   return (
     <div>
         {userName ? (
@@ -65,9 +68,32 @@ function Dashboard() {
                             (<div className='grid-sm'>
                             <div className="grid-lg">
                                 <div className="flex-lg">
-                           <AddBudgetForm/>
-                           <AddExpenseForm budgets={budgets}/>
-                           </div>
+                                <AddBudgetForm/>
+                                <AddExpenseForm budgets={budgets}/>
+                                </div>
+                           <h2>Existing Budgets</h2>
+                            <div className='budgets'>
+                                {budgets.map(budget => (
+                                    <BudgetItem key = {budget.id} budget={budget}/>
+                                ))}
+                            </div>
+                            <div>
+                                {
+                                    expenses && expenses.length > 0 && 
+                                    (
+                                        <div className='grid-md'>
+                                            <h2>Recent Expenses</h2>
+                                            <Table expenses={expenses.sort((a,b) => b.createAt - a.createAt).slice(0,8)}/>
+                                            <Link
+                                            to="expenses"
+                                            className='btn btn--dark'
+                                            >
+                                                View all expenses
+                                            </Link>
+                                        </div>
+                                    )
+                                }
+                            </div>
                     </div>
                 </div>):(
                     <div className="grid-sm">
