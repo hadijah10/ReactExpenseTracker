@@ -1,6 +1,6 @@
 import React from 'react'
 import { Link, useLoaderData } from 'react-router-dom';
-import { createBudget, createExpense, fetchData } from '../helpers';
+import { createBudget, createExpense, deleteItem, fetchData } from '../helpers';
 import Intro from '../components/Intro';
 import {toast } from 'react-toastify';
 import AddBudgetForm from '../components/AddBudgetForm';
@@ -29,7 +29,9 @@ export async function dashboardAction({request}){
       return  toast.success(`Welcome ${values.userName}`)
      }
      catch(e){
+        console.log(e);
         throw new Error("There was a problem creating your account")
+        
        
      }
  }
@@ -50,6 +52,17 @@ export async function dashboardAction({request}){
            return toast.success(`Expense ${values.newExpense} created`)
         }catch (e){
             throw new Error ("There was a problem creating your expense")
+        }
+    }
+    if(_action === "deleteExpense"){
+        try{
+            deleteItem({
+               key:"expenses",
+               id:values.expenseid
+            });
+            return toast.success("Expense deleted")
+        }catch(e){
+            throw new Error("There was a problem with deleting your expense")
         }
     }
 }
@@ -84,12 +97,14 @@ function Dashboard() {
                                         <div className='grid-md'>
                                             <h2>Recent Expenses</h2>
                                             <Table expenses={expenses.sort((a,b) => b.createAt - a.createAt).slice(0,8)}/>
-                                            <Link
-                                            to="expenses"
-                                            className='btn btn--dark'
-                                            >
-                                                View all expenses
-                                            </Link>
+                                            {expenses.length> 8 && (
+                                                <Link
+                                                to="expenses"
+                                                className='btn btn--dark'
+                                                >
+                                                    View all expenses
+                                                </Link>
+                                            )}
                                         </div>
                                     )
                                 }

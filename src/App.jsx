@@ -6,7 +6,7 @@ import Dashboard, { dashboardAction, dashboardLoader } from './pages/Dashboard';
 import Error from './pages/Error';
 import { logoutAction } from './actions/logout';
 import { ToastContainer } from 'react-toastify';
-import ExpensesPage,{expensesLoader} from './pages/ExpensesPage';
+import ExpensesPage,{expensesLoader,expensesAction} from './pages/ExpensesPage';
 import 'react-toastify/dist/ReactToastify.css';
 
 function App() {
@@ -25,15 +25,15 @@ function App() {
         errorElement: <Error/>  
         },
         {
-          path: "logout",
-       action: logoutAction
-        },
-        {
           path:"expenses",
           element:<ExpensesPage />,
-          looader: expensesLoader,
-        }
-        
+          loader: expensesLoader,
+          action:expensesAction,
+        },
+        {
+          path: "logout",
+       action: logoutAction
+        } 
     ]
   },
    
